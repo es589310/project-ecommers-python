@@ -4,6 +4,9 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
 class Account(AbstractUser):
+    """
+    Custom user model!
+    """
     username = models.CharField(_("username"), max_length=255, blank=True, null=True)
     # _("username") verbose_name-i transtlate-ə almaq üçündürki biz onu from/importdan təyin edib kodlada gettext_lazy funksiyasını yazdım
     email = models.EmailField(_("email adress"), unique=True, null=True)
