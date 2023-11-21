@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: postgres-db-my_project_dock
+    image: postgres:13.0-alpine
+    ports:
+      - 5432:5432 # -5432:5432 wrong, - 5432:5432 true
+    volumes:
+      - ./pgdb:/var/lib/postgresql/data
+    env_file: .env
+
+    
