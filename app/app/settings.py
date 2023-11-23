@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     # 'account.apps.AccountConfig',
     'account_1',
     'contact.apps.ContactConfig',
-    'product.apps.ProductConfig'
+    'product.apps.ProductConfig',
+    'modeltranslation',
+
 ]
  
 MIDDLEWARE = [ #jangonun bize verdiyi xususiyyetler / nedir? = request gonderirik sayta,servere, saytda response qaytarir. hemen o response olaraq qayidan shey middleware-inin ichidir
@@ -62,9 +64,11 @@ MIDDLEWARE = [ #jangonun bize verdiyi xususiyyetler / nedir? = request gonderiri
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ] 
 
 ROOT_URLCONF = 'app.urls' #elave urls yazilarsa core-a, o zaman istifade olur,nece? onu axtar

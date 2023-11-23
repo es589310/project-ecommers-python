@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 # from core import views
 from django.contrib import admin
 from django.urls import  include, path  # 'include' ve 'path' modüllerini burada tek seferde ekleyin
-
+from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
     path('my_project/', admin.site.urls), #burada istenilen ad verile biler p808_admin/ yerinde
@@ -31,6 +31,15 @@ urlpatterns = [
     # path('my_name/', include('app.urls')),  # app.urls yerine kendi uygulama adınızı kullanın
 
 ]  
+
+urlpatterns +=i18n_patterns (
+    path("", include("account_1.urls")),    
+    path("", include("core.urls")),
+    path("", include("about_1.urls")),
+    path("", include("contact.urls")),
+    path("i18n/", include("django.conf.urls.i18n")),
+    # path("", include("product.urls")),
+)
 #setttings debug true oldughu halda localda lazim olacaq
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) #statik fayllarla,yeni css,javascripleri gore bilim.. 
