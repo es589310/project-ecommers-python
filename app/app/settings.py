@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # 'account.apps.AccountConfig',
     'account_1',
     'contact.apps.ContactConfig',
+    'product.apps.ProductConfig'
 ]
  
 MIDDLEWARE = [ #jangonun bize verdiyi xususiyyetler / nedir? = request gonderirik sayta,servere, saytda response qaytarir. hemen o response olaraq qayidan shey middleware-inin ichidir
@@ -97,6 +98,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.context_processors.subject_renderer',
             ],
         },
     },
@@ -153,7 +155,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'tr'
+LANGUAGE = (
+    ('en', 'English'),
+    ('az', 'Azerbaijan'),
+    ('tr', 'Turkish'),
+)
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = "en"
+MODELTRANSLATION_LANGUAGES = ("tr","az","en")
+
+LANGUAGE_CODE = 'az'
 
 TIME_ZONE = 'Asia/Baku'
 

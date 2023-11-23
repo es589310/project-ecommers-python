@@ -16,7 +16,20 @@
     </div>
 </div>
 <!-- Page Header End -->
-
+{% comment %} 
+{{ message.tags }} = viewsden ne gondermisikse meselen success odur 
+alert alert-{{ message.tags }} eger ichindeki metn errordursa qirmizi, success dirse yashil olacaq,info olsa boz 
+ve dinamik teqde gosteririk, chunki statik olsa birbsa success versek belke error olacaq ona gore succes vermesin
+{% endcomment %}
+{% if messages %}
+    {% for message in messages %}
+        <center>
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        </center>
+    {% endfor %}
+{% endif %}
 
 <!-- Contact Start -->
 <div class="container-fluid pt-5">
