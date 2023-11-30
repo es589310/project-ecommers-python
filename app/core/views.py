@@ -6,3 +6,9 @@ from django.shortcuts import render
 
 def index(request): #funksiya esasli view yaziriqsa mutle, ilk arqumnet request olmali 
     return render(request, 'home/index.html') #birbaşa home,çünki djangoya html kodlarını hardan oxumağı göstərdim
+
+# core/views.py
+
+# def product(request):
+#     # Fonksiyonun içeriği
+#     pass

@@ -1,4 +1,4 @@
-from core import views
+from . import views
 
 from django.urls import  path  # 'include' ve 'path' modüllerini burada tek seferde ekleyin
 

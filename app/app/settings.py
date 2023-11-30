@@ -55,12 +55,14 @@ INSTALLED_APPS = [
     'account_1',
     'contact.apps.ContactConfig',
     'product.apps.ProductConfig',
-    'modeltranslation',
+    'modeltranslation', 
+    'order.apps.OrderConfig',
 
 ]
  
 MIDDLEWARE = [ #jangonun bize verdiyi xususiyyetler / nedir? = request gonderirik sayta,servere, saytda response qaytarir. hemen o response olaraq qayidan shey middleware-inin ichidir
     'django.middleware.security.SecurityMiddleware',
+    # 'app.middleware.force_default_middleware.force_default_language_middleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -159,7 +161,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE = (
+LANGUAGES = (
     ('en', 'English'),
     ('az', 'Azerbaijan'),
     ('tr', 'Turkish'),
@@ -169,7 +171,9 @@ LOCALE_PATHS = (
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = "en"
-MODELTRANSLATION_LANGUAGES = ("tr","az","en")
+MODELTRANSLATION_LANGUAGES = ("tr", "az", "en")
+
+
 
 LANGUAGE_CODE = 'az'
 
