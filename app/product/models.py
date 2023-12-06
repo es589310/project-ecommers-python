@@ -96,6 +96,7 @@ class Color(BaseModel):
 
 class Product(BaseModel):
     name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
     price = models.DecimalField(
         max_digits=16, #max_digits=rəqəmlərin sayı(milyon yazılsa deyə)
         decimal_places=2, #decimal_places=qiymətlərdəki vergüldən sonrarki rəqəm sayı
@@ -137,6 +138,14 @@ class Product(BaseModel):
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
 
+# class ProductImage(models.Model):
+#     product = models.ForeignKey(
+#         Product, # əgər bağlıycağım kode bu yazılan modeldən yuxarıdadırsa dırnaqsız yazılır 
+#         on_delete=models.CASCADE,
+#         related_name='images'
+#     )
+#     image = models.ImageField(upload_to='products')
+
 class ProductItem(BaseModel):
     user = models.ForeignKey( # bu user ile orderitem ilə əlaqəni yaratdıq
         'account_1.Account',
@@ -160,7 +169,7 @@ class ProductItem(BaseModel):
     )
     quantity = models.PositiveIntegerField()
     order = models.ForeignKey(
-        'order.Order',
+        'order.Order', # əgər bağlıycağım model bu yazılan modeldən aşağıdadırsa dırnaqla, appinadı.Modelinadı olaraq yazılır
         on_delete=models.SET_NULL,
         related_name='items',
         null=True,
@@ -182,3 +191,26 @@ class ProductItem(BaseModel):
         verbose_name = 'Product item'
         verbose_name_plural = 'Products items'
         default_related_name = 'product_items'
+
+class Comment(BaseModel): # created_at, updated_at götürməsi lazımdı
+    user = models.ForeignKey(
+        'account_1.Account',
+        on_delete=models.CASCADE,
+        
+        
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        null=True,
+        
+    )
+    text = models.TextField()
+
+    def __str__(self) -> str:
+        return self.user.email
+    
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+        default_related_name='comments'
