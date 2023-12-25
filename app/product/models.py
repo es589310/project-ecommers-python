@@ -177,7 +177,7 @@ class ProductItem(BaseModel):
     )
     status = models.IntegerField(
         choices=ORDER_STATUSES,
-        default=0 #BASKET
+        default=0 #BASKET birinci gelmelidir
     )
 
     def __str__(self) -> str:

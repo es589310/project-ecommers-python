@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'modeltranslation', 
     'order.apps.OrderConfig',
     'rest_framework',
+    # 'modeltranslation',
 ]
  
 MIDDLEWARE = [ #jangonun bize verdiyi xususiyyetler / nedir? = request gonderirik sayta,servere, saytda response qaytarir. hemen o response olaraq qayidan shey middleware-inin ichidir
