@@ -12,7 +12,10 @@ class Order(models.Model):
         null=True,
         blank=True
     )
-    is_done = models.BooleanField(default=False)
+    # default=False - heçnə etməsək avtomatik False olacaq
+    is_done = models.BooleanField(default=False) # yəni bu sifariş artıq çatdırılıb. Düşüb arxivə/product/model/Product Items
+    # bunların arasındaki əlaqə "bir sifarişə birdən çox məhsul" 
+    # ForeignKey çoxdan çoxa qoyulur, az olan və tək olana yox
 
     class Meta:
         verbose_name = 'Order'

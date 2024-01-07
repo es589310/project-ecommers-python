@@ -53,7 +53,7 @@ def product_detail(request,product_slug ): #detail, uptdate delete deyirse o oby
         'other_products' : other_products, 
         'form' : form,
         'reviews' : reviews, # nə elə? reviews adı ilə göndər səhifəmə, sonra detail.html-də həmin revieləri     
-        'review.count' : review_count,
+        'review_count' : review_count,
         'form2' : product_item_form
     }
     return render(request, 'product/detail.html', context)

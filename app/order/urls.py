@@ -5,4 +5,6 @@ from django.urls import  path  # 'include' ve 'path' modüllerini burada tek sef
 
 urlpatterns = [
     path('basket', views.basket, name='basket'),
+    path('checkout', views.checkout, name='checkout'),
+
 ]

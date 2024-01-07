@@ -27,6 +27,8 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% block css %}
+    {% endblock %}
 </head>
 
 <body>
@@ -91,9 +93,9 @@
                     <i class="fas fa-heart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
-                <a href="" class="btn border">
+                <a href="{% url 'basket' %}" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
+                    <span id="basket-order-count" class="badge">{{ basket_order_count }}</span>
                 </a>
             </div>
         </div>
@@ -277,10 +279,12 @@
     <script src="{% static 'mail/contact.js' %}"></script>
 
     <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
     <script>
         let csrftoken_ = '{{ csrf_token }}'        
     </script>
-
+    
     {% block js %}
     {% endblock %}
 
