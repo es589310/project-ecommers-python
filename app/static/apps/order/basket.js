@@ -75,7 +75,7 @@ function createOrder() {
       shipping: document.getElementById("shipping").innerText,
       items: getItems(),
     },
-    dataType: "json", 
+    dataType: "json",
     success: function (resp) {
       console.log('gonderdiyim data', data);
       console.log('getItems() funksiyasinin yigdigi', getItems());
