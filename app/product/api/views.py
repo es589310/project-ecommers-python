@@ -19,7 +19,9 @@ class ProductItemCreateAPIView(generics.CreateAPIView): # yaratmaq views-u Creat
         instance = serializer.save() # save oldusa, yeni bir product_item yarandı, serialzerin save olunmuş halıdıır
         instance.user = request.user # user serializers.py-də user qeyd etmədiyimiz üçün burde ayrıca request edirik 
         instance.save() # və birdə save edirik, dəyişikliklər yadda qalır
-        
+        # increasing count of adding  product  to basket
+        instance.product.adding_to_basket_count += 1
+        instance.product.save()                
 
         data = serializer.data # bu kod sətri göndərdiyimiz APİ sorğusunu aydın görə bilməyimiz üçündür, DEPLOY-da istifadə olunmur
 

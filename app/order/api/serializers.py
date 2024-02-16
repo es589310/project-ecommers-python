@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from order.views import WishList
 from ..models import Order
 
 
@@ -15,6 +17,12 @@ class OrderIsDoneSerializer(serializers.ModelSerializer):
         model = Order
         fields = ('is_done',)
 
+
+class AddToWishListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = WishList
+        fields = ('product',)
 
 """
 from rest_framework import serializers

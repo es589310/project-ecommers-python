@@ -59,6 +59,9 @@ INSTALLED_APPS = [
     'order.apps.OrderConfig',
     'rest_framework',
     # 'modeltranslation',
+    'celery',
+    'django_celery_results',
+    'django_celery_beat',
 ]
  
 MIDDLEWARE = [ #jangonun bize verdiyi xususiyyetler / nedir? = request gonderirik sayta,servere, saytda response qaytarir. hemen o response olaraq qayidan shey middleware-inin ichidir
@@ -67,6 +70,7 @@ MIDDLEWARE = [ #jangonun bize verdiyi xususiyyetler / nedir? = request gonderiri
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'utils.current_request.RequestMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -127,11 +131,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': "my_project_db",
-        'USER': "my_project_user",
-        'PASSWORD': "d8y46KEACjMtdepRf5TaMjCod1gtBlh2A8XfFs0zrg",
-        'HOST': "localhost", #burda localhost, .env ichinde servisin adı yazilir
-        'PORT': "5432",
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'), #burda localhost, .env ichinde servisin adı yazilir
+        'PORT': os.getenv('POSTGRES_PORT'),
         # 'OPTIONS': {
         #     'options': '-c timezone=UTC',
         # }
@@ -207,3 +211,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/' #login olunmayan səhifəyə daxil olarkən login səhifəyə yönləndirər bu kodla
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
+
+
+# email conf
+"""EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = str(os.getenv('EMAIL_USER')) # email user ile..
+EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_PASS')) #..email pass ortada açıq qoymağa ehtiyac yoxdur"""

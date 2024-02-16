@@ -1,19 +1,61 @@
-# from contextlib import redirect
-from django.shortcuts import redirect, render, get_object_or_404
+from typing import Any
+
+from django.db.models.query import QuerySet
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-
-from django.views import generic #generic-in içində bütün class view-ları var
-
-from .models import Product, Category, Comment
-from .forms import CommentForm, ProductItemForm
+from django.utils.translation import gettext_lazy as _
+from django.views import generic
 
 
-class ProductListView(generic.ListView): # Listview yəni siyahı göstərəcəyik / django başadüşəcəkki list göndərəcəyik
-    template_name = 'product/list.html' # template name-i verməliyəm
+from .forms import CommentForm
+from .models import Category, Comment, Product
+
+class ProductListView(generic.ListView):
+    template_name = "product/list.html"
     model = Product
-    context_object_name = 'products' #
-    paginate_by = 9 # böyükrəqəm yazsam daha maraqlı məqam ortaya çıxır   # class əsaslı view-da pagenate əlavə etməklə bitir / niyə funksiya əsaslı vieüdən class əsaslıya keçdik  sualına cavab
-    #paginate listi səhifələrə bölməkdi
+    context_object_name = "products"
+    paginate_by = 9
+
+    def get_queryset(self) -> QuerySet[Any]:
+        qs = super().get_queryset()
+        print('heyooo============', self.request.GET)
+        if 'filter' in self.request.GET:
+            our_filter = self.request.GET['filter']
+            if our_filter == 'latest':
+                qs = qs.order_by('-created_at')
+            elif our_filter == 'trandy':
+                qs = qs.order_by('-adding_to_basket_count')
+            elif our_filter == 'increased_price':
+                qs = qs.order_by('price')
+            elif our_filter == 'decreased_price':
+                qs = qs.order_by('-price')
+        if 'start_price' in self.request.GET and 'end_price' in self.request.GET:
+            start_price = int(self.request.GET.get('start_price'))
+            end_price = int(self.request.GET.get('end_price'))
+            qs = qs.filter(price__range=[start_price, end_price])
+        return qs
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        if 'start_price' in self.request.GET and 'end_price' in self.request.GET:
+            start_price = int(self.request.GET.get('start_price'))
+            end_price = int(self.request.GET.get('end_price'))
+            context['start_price'] = start_price
+            context['end_price'] = end_price
+        if 'filter' in self.request.GET:
+            our_filter = self.request.GET['filter']
+            if our_filter == 'latest':
+                context['our_filter'] = _('Latest')
+            elif our_filter == 'trandy':
+                context['our_filter'] = _('Popularity')
+            elif our_filter == 'increased_price':
+                context['our_filter'] = _('Increased price')
+            elif our_filter == 'decreased_price':
+                context['our_filter'] = _('Decreased price')
+        else:
+            context['our_filter'] = _('Sort by')
+        return context
 
 
 def products_by_category(request, category_slug):
@@ -22,40 +64,48 @@ def products_by_category(request, category_slug):
     context = {"products": products}
     return render(request, "product/list.html", context)
 
-def product_detail(request,product_slug ): #detail, uptdate delete deyirse o obyektin ya id -s i lazimdi yada slugi lazimdi
+
+def product_detail(request, product_slug):
     product = get_object_or_404(Product, slug=product_slug)
-    """product = Product.objects.get(slug=product_slug) # get - product içində olanlardan birini götürür, hansı olduğunu müəyyən etmək üçün..
-    slug=product_slug / slug - Product-ın içindəki field-in adıdır, product_slug isə (request,product_slug )-ə bərabərdi, product/urls.py-ə əlavə olunmalıdı     """
     other_products = Product.objects.filter(category=product.category).exclude(
         slug=product.slug
-    ).distinct() # dublicatları ləğv edir / dublicat düşən məhsulları təkə salır
-    
-    reviews = Comment.objects.filter(product=product).order_by('-created_at')  # məhsul field-i,product filed-i bərabər olan bizim məhsula, detail-də olan məhsula..
-    #.. Comment-ləri yığ, yığ nə elə?
+    ).distinct()
+
+    reviews = Comment.objects.filter(product=product).order_by('-created_at')
     review_count = reviews.count()
-    product_item_form = ProductItemForm
-    
     form = CommentForm()
-    
-    if request.method == 'POST': # eger request metod postdursa
-        if 'review-form' in request.POST:
-            form = CommentForm(request.POST) #request.post formdan gonderilenlerdir/onu commentforma verir
-            if form.is_valid(): #eger form duzgundurse, validdirse..  
-                form.instance.user = request.user #models/Comment//user beraber olsun requesti gonderene, hemin vaxti login olan kimdirse o 
-                form.instance.product = product #mehsuluda bildiririk, yuxaridaki product-a beraber edirik onuda
-                form.save()
-                return redirect(reverse("product-detail", args=(product.slug, )))  # noqa: F821
-        else:
-            product_item_form = ProductItemForm(request.POST)
+
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.instance.user = request.user
+            form.instance.product = product
+            form.save()
+            return redirect(reverse("product-detail", args=(product.slug,)))
+
+        
+    context = {
+        "product": product,
+        'other_products': other_products,
+        'form': form,
+        'reviews': reviews,
+        'review_count': review_count,
+        }
+    return render(request, "product/detail.html", context)
+
+
+def search(request):
+    query = request.GET.get('search')
+    if query:
+        products = Product.objects.filter(name__icontains=query)
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     context = {
-        'product' : product,
-        'other_products' : other_products, 
-        'form' : form,
-        'reviews' : reviews, # nə elə? reviews adı ilə göndər səhifəmə, sonra detail.html-də həmin revieləri     
-        'review_count' : review_count,
-        'form2' : product_item_form
+        'result_count': len(products),
+        'query': query,
+        'results': products
     }
-    return render(request, 'product/detail.html', context)
 
-
+    return render(request, 'product/search.html', context)

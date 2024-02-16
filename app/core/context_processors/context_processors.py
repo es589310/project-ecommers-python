@@ -1,3 +1,4 @@
+from order.models import WishList
 from product.models import Category, ProductItem
 from contact.models import ContactInfo
 
@@ -11,6 +12,6 @@ def subject_renderer(request):
         context.update({
             # basket_order_count bunu götürüb base/index.html-də yazırıq 
             'basket_order_count': ProductItem.objects.filter(user=request.user, status = 0).count() or 0,
-            # 'wish_list_count': WishList.objects.filter(user=request.user).first().product.count() if WishList.objects.filter(user=request.user).first() else 0
+            'wish_list_count': WishList.objects.filter(user=request.user).first().product.count() if WishList.objects.filter(user=request.user).first() else 0
         })
     return context

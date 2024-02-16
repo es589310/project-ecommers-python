@@ -1,4 +1,6 @@
 from django.db import models
+from order.models import WishList
+from utils.current_request import get_current_request
 # from ..utils.models import BaseModel # utils/models.py-deki basdemodel-dan goturur
 
 ORDER_STATUSES = ( # tuple ichinde tuple-dan ibaretdir  
@@ -32,7 +34,11 @@ class Category(BaseModel):
     )
 
     is_parent = models.BooleanField(default=False)
-
+    image = models.ImageField(
+        upload_to='categories',
+        null=True,
+        blank=True,
+    )
     def __str__(self) -> str:
         return self.name
 
@@ -42,7 +48,11 @@ class Category(BaseModel):
 
 class Brand(BaseModel): #bura məhsul tipidi: Ayaqqabı
     name = models.CharField(max_length=255)
-
+    logo = models.FileField(
+        upload_to='brands',
+        null=True,
+        blank=True        
+        )
     def __str__(self) -> str:
         return self.name
 
@@ -137,6 +147,9 @@ class Product(BaseModel):
         null=True,
         blank=True
     )
+    adding_to_basket_count = models.PositiveIntegerField(
+        default = 0
+    )
 
     def __str__(self) -> str:
         return self.name
@@ -155,6 +168,13 @@ class Product(BaseModel):
     class Meta:
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
+
+    @property
+    def has_added_to_wish_list(self):
+        request = get_current_request()
+        wl = WishList.objects.filter(user=request.user).first()
+        product = Product.objects.filter(id=self.id).first()
+        return bool(wl and product and product in wl.product.all())
 
 # class ProductImage(models.Model):
 #     product = models.ForeignKey(
